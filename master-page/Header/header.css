@@ -1,0 +1,70 @@
+.header {
+    flex-direction: row;
+    justify-content: space-between;
+
+    position: fixed;
+    padding: 10px 16px;
+    z-index: 10;
+    width: 100%;
+
+    color: var(--dark-theme_font);
+    background: var(--dark-theme_background);
+    box-shadow: 0 2px 5px black;
+}
+
+
+
+.header__brand-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+
+}
+
+.header__title {
+    font-size: 1.6rem;
+    margin: 0;
+    margin-left: 32px;
+}
+
+.header__logo-image {
+    height: 60px;
+    /*width: auto;*/
+
+    /*число взято исходя из изображения логотипа*/
+    width: 222px;
+}
+
+/*.header__nav {*/
+/*margin-left: 18px;*/
+/*}*/
+
+/*.header__nav-link {*/
+/*text-decoration: none;*/
+/*font-size: 1.3rem;*/
+/*padding: 8px 18px;*/
+/*}*/
+
+/*.header__nav-link:hover {*/
+/*!*text-decoration: underline;*!*/
+/*color: #c7c7c7;*/
+/*}*/
+
+/*.header__nav-link_active {*/
+/*color: #c7c7c7;*/
+/*}*/
+/*.header__nav-link_active:hover {*/
+/*text-decoration: none;*/
+/*}*/
+
+/*.header__nav-link.selected {*/
+
+/*}*/
+
+.brand {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+

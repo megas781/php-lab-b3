@@ -1,0 +1,42 @@
+.form-label {
+    text-align: center;
+}
+#arr-items-input-view {
+    width: 100%;
+}
+#arr-items-input-view td {
+    padding: 0;
+}
+.arr-item__input {
+    border: 1px solid #cfcfcf;
+    padding: 4px;
+    width: 100%;
+    display: block;
+    background-color: white;
+    text-decoration: none;
+    color: black;
+    /*text-align: center;*/
+    font-size: 18px;
+}
+a.arr-item__input {
+    text-align: center;
+}
+
+.text-view {
+    width: 360px;
+    font-size: 18px;
+    background-color: white;
+    min-height: 80px;
+    max-height: 160px;
+    border: none;
+    padding: 4px;
+    overflow-y: scroll;
+}
+
+#form-bottom-controls {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    padding-top: 16px;
+}
+
