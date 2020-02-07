@@ -20,7 +20,7 @@ function printDirItemsList($dirName, $dirPath)
         if (is_dir($dirPath . '/' . $dirItemName)):
             printDirItemsList($dirItemName, $dirPath . '/' . $dirItemName);
         elseif (is_file($dirPath . '/' . $dirItemName)): ?>
-            <a href="" class="tree__item-view file"><?= $dirItemName ?></a>
+            <a href="<?= './viewer.php?path=' . $dirPath . '/' . $dirItemName ?>" class="tree__item-view file"><?= $dirItemName ?></a>
         <? endif;
     endwhile;
     echo '    </div>
@@ -48,7 +48,7 @@ function printDirItemsList($dirName, $dirPath)
             if (is_dir('./root/' . $dirItemName)):
                 printDirItemsList($dirItemName, './root/' . $dirItemName);
             elseif (is_file('./root/' . $dirItemName)): ?>
-                <a href="" class="tree__item-view file"><?= $dirItemName ?></a>
+                <a href="<?= './viewer.php?path=' . './root/' . $dirItemName ?>" class="tree__item-view file"><?= $dirItemName ?></a>
             <? endif;
         }
         ?>

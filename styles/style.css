@@ -68,3 +68,17 @@
 .file.tree__item-view::before {
     background-image: url("https://schoeneworth.de/wp-content/uploads/2014/11/dok-300x300.png");
 }
+
+.file-view {
+    min-width: 320px;
+    min-height: 140px;
+
+    max-width: 1024px;
+    max-height: 350px;
+
+    background-color: white;
+    padding: 12px;
+    margin-bottom: 20px;
+
+    overflow-y: scroll;
+}
