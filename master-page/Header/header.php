@@ -46,5 +46,11 @@
 
 ?>
 <main>
+    <? if(isset($authUser) && isset($authUser['name'])): ?>
+    <div class="profile-menu">
+        <span class="profile-menu__username"><?=$authUser['name']?></span>
+        <a href="?logout=<?=$authUser['name']?>" class="profile-menu__exit-button">Выйти</a>
+    </div>
+    <?endif;?>
     <div class="_flex-centering">
         <div>

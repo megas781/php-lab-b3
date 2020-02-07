@@ -5,11 +5,7 @@ require_once 'app-start.php';
 
 ?>
 
-<?php require SITE_ROOT . 'master-page/Header/header.php'; ?>
-<div class="profile-menu">
-    <span class="profile-menu__username">megas781</span>
-    <a href="" class="profile-menu__exit-button">Выйти</a>
-</div>
+<?php //require SITE_ROOT . 'master-page/Header/header.php'; ?>
 <div class="column _flex-centering">
     <h3>Файлы системы</h3>
     <div class="tree">
@@ -43,5 +39,5 @@ require_once 'app-start.php';
         });
     });
 </script>
-<?php require SITE_ROOT . 'master-page/Footer/footer.php' ?>
+<?php //require SITE_ROOT . 'master-page/Footer/footer.php' ?>
 
