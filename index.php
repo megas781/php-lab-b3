@@ -6,8 +6,10 @@ session_start();
 
 $authUser = null;
 
-if (isset($_GET['logout']) && $_GET['logout'] == $_SESSION['authUserName']) {
-    $_SESSION['authUserName'] = null;
+if (isset($_GET['logout']) && isset($_SESSION['authUserName']) && $_GET['logout'] == $_SESSION['authUserName']) {
+    unset($_SESSION['authUserName']);
+    header('Location: /php-lab-b3/');
+    exit();
 }
 
 function authenticate(string $login, string $password)
@@ -24,7 +26,7 @@ function authenticate(string $login, string $password)
             if (trim($test_user[1]) == $password) {
                 //Опача, успешный вход. Сохраняем в сессии
                 $_SESSION['authUserName'] = $_POST['login'];
-
+                fclose($f);
                 //Возвращаем объект пользователя. Пока одно поле, да.
                 return [
                         'name' => $test_user[0]
@@ -32,6 +34,7 @@ function authenticate(string $login, string $password)
             }
         }
     }
+    fclose($f);
     return null;
 }
 
@@ -41,6 +44,10 @@ if (isset($_SESSION['authUserName'])) {
     $authUser = ['name' => $_SESSION['authUserName']];
 } elseif (isset($_POST['login']) && isset($_POST['password'])) {
     $authUser = authenticate($_POST['login'], $_POST['password']);
+
+    //Строка ниже создана, чтобы после входа при обновлении страницы браузер не спрашивал о повторении отправки формы
+    header('Location: ./');
+    exit();
 } else {
     $authUser = null;
 }
