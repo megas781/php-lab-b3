@@ -6,6 +6,30 @@ session_start();
 
 $authUser = null;
 
+//function deleteDirectory($path, $context)
+//{
+//
+//    $dir = opendir($dirPath);
+//    echo '
+//        <div class="folder">
+//            <div class="tree__item-view folder__name">' . $dirName . '</div>
+//            <div class="folder__items">';
+//
+//
+//    while (($dirItemName = readdir($dir)) !== false):
+//        if ($dirItemName == '.' || $dirItemName == '..') {
+//            continue;
+//        }
+//        if (is_dir($dirPath . '/' . $dirItemName)):
+////            printDirItemsList($dirItemName, $dirPath . '/' . $dirItemName);
+////        Удаляем удаляем содержимое директории, а потом саму директорию
+//        elseif (is_file($dirPath . '/' . $dirItemName)):
+////        удаляем файл. unlink
+//        endif;
+//    endwhile;
+//    closedir($dir);
+//}
+
 if (isset($_GET['logout']) && isset($_SESSION['authUserName']) && $_GET['logout'] == $_SESSION['authUserName']) {
     unset($_SESSION['authUserName']);
     header('Location: /php-lab-b3/index.php');
@@ -15,13 +39,28 @@ if (isset($_GET['logout']) && isset($_SESSION['authUserName']) && $_GET['logout'
 //Относится к модулю tree, но да пофиг. Проверка, не хочет ли загрузиться какой-нибудь файл
 if (isset($_FILES['myfilename'])) {
     if (isset($_FILES['myfilename']['tmp_name'])) {
-        if (is_dir('./root/' . $_POST['dir-name'])) {
-            move_uploaded_file($_FILES['myfilename']['tmp_name'], './root/' . $_POST['dir-name']. '/' . $_FILES['myfilename']['name']);
-            header('Location: ./index.php');
+        //Проверяем наличие загруженного файла на серверной стороне
+        if ($_FILES['myfilename']['tmp_name']) {
+
+            //Если каталог, который указан в форме??
+            $chosenUploadDirectory = './root/' . trim($_POST['dir-name'], ' /');
+
+            if (is_dir($chosenUploadDirectory)) {
+                scandir($chosenUploadDirectory);
+                $k = 0;
+                                move_uploaded_file($_FILES['myfilename']['tmp_name'], $chosenUploadDirectory . '/' . $k);
+                header('Location: ./index.php');
+            } else {
+                //Если каталог не существует, мы его создадим
+                mkdir($chosenUploadDirectory);
+
+                header('Location: ./index.php');
+            }
+            exit();
         } else {
-            header('Location: ./index.php');
+            //удаляем каталог со всеми файлами
+
         }
-        exit();
     }
 }
 
