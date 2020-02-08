@@ -8,8 +8,21 @@ $authUser = null;
 
 if (isset($_GET['logout']) && isset($_SESSION['authUserName']) && $_GET['logout'] == $_SESSION['authUserName']) {
     unset($_SESSION['authUserName']);
-    header('Location: /php-lab-b3/');
+    header('Location: /php-lab-b3/index.php');
     exit();
+}
+
+//Относится к модулю tree, но да пофиг. Проверка, не хочет ли загрузиться какой-нибудь файл
+if (isset($_FILES['myfilename'])) {
+    if (isset($_FILES['myfilename']['tmp_name'])) {
+        if (is_dir('./root/' . $_POST['dir-name'])) {
+            move_uploaded_file($_FILES['myfilename']['tmp_name'], './root/' . $_POST['dir-name']. '/' . $_FILES['myfilename']['name']);
+            header('Location: ./index.php');
+        } else {
+            header('Location: ./index.php');
+        }
+        exit();
+    }
 }
 
 function authenticate(string $login, string $password)
@@ -54,7 +67,6 @@ if (isset($_SESSION['authUserName'])) {
 
 
 ?>
-
 <?php require SITE_ROOT . 'master-page/Header/header.php'; ?>
 <div class="column _flex-centering">
     <? if ($authUser): ?>

@@ -2,7 +2,6 @@
 
 require_once 'app-start.php';
 
-
 function printDirItemsList($dirName, $dirPath)
 {
 
@@ -20,7 +19,8 @@ function printDirItemsList($dirName, $dirPath)
         if (is_dir($dirPath . '/' . $dirItemName)):
             printDirItemsList($dirItemName, $dirPath . '/' . $dirItemName);
         elseif (is_file($dirPath . '/' . $dirItemName)): ?>
-            <a href="<?= './viewer.php?path=' . $dirPath . '/' . $dirItemName ?>" class="tree__item-view file"><?= $dirItemName ?></a>
+            <a href="<?= './viewer.php?path=' . $dirPath . '/' . $dirItemName ?>"
+               class="tree__item-view file"><?= $dirItemName ?></a>
         <? endif;
     endwhile;
     echo '    </div>
@@ -48,13 +48,13 @@ function printDirItemsList($dirName, $dirPath)
             if (is_dir('./root/' . $dirItemName)):
                 printDirItemsList($dirItemName, './root/' . $dirItemName);
             elseif (is_file('./root/' . $dirItemName)): ?>
-                <a href="<?= './viewer.php?path=' . './root/' . $dirItemName ?>" class="tree__item-view file"><?= $dirItemName ?></a>
+                <a href="<?= './viewer.php?path=' . './root/' . $dirItemName ?>"
+                   class="tree__item-view file"><?= $dirItemName ?></a>
             <? endif;
         }
         ?>
     </div>
 </div>
-
 <script>
     document.querySelectorAll('.folder__name').forEach(function (value, key, parent) {
         value.addEventListener('click', function (e) {
@@ -62,8 +62,18 @@ function printDirItemsList($dirName, $dirPath)
         });
     });
 </script>
-<?php
 
+<form method="post" enctype="multipart/form-data" action="">
+    <h3>Загрузить файл</h3>
+    <div><label for="dir-name">Каталог на сервере</label></div>
+    <div><input type="text" name="dir-name" id="dir-name" value="/" pattern="^/*"></div>
+
+    <div><label for="myfilename">Локальный файл</label></div>
+    <div><input type="file" name="myfilename" required></div>
+
+    <div><input type="submit" value="Отправить файл на сервер"></div>
+</form>
+<?php
 
 //require SITE_ROOT . 'master-page/Footer/footer.php' ?>
 

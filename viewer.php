@@ -33,7 +33,33 @@ if (isset($_SESSION['authUserName'])) {
     <? if ($authUser): ?>
         <h4>Добро пожаловать, <?= $authUser['name'] ?>!</h4>
         <a href="./index.php" style="display: block; padding: 8px;">К списку файлов</a>
-        <div class="file-view">
+
+        <!--        выбираем viewer текстовый или изображение -->
+        <?
+
+        $filename = explode('/', $_GET['path'])[array_key_last(explode('/', $_GET['path']))];
+        $ext = explode('.', $filename)[array_key_last(explode('.', $filename))];
+        echo '<p>Файл: ' . $filename . '</p>';
+        if ($ext === 'jpg' ||
+            $ext === 'jpeg' ||
+            $ext === 'png' ||
+            $ext === 'svg' ||
+            $ext === 'gif'): ?>
+            <img class="image-viewer" src="<?= $_GET['path'] ?>" alt="<?= $_GET['path'] ?>">
+            <style>
+                .image-viewer {
+                    min-width: 320px;
+                    min-height: 140px;
+
+                    max-width: 1024px;
+                    max-height: 350px;
+
+                    display: block;
+                    object-fit: contain;
+                }
+            </style>
+        <? else: ?>
+            <div class="file-view">
 <pre>
 <?
 $f = fopen($_GET['path'], 'rt');
@@ -42,10 +68,10 @@ while (($line = fgets($f)) !== false) {
 }
 ?>
 </pre>
-        </div>
-    <? else:
-        header('Location: /index.php');
-    endif; ?>
+            </div>
+        <? endif; ?>
+    <? endif; ?>
 </div>
+
 <?php require SITE_ROOT . 'master-page/Footer/footer.php' ?>
 
