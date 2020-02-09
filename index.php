@@ -6,30 +6,6 @@ session_start();
 
 $authUser = null;
 
-//function deleteDirectory($path, $context)
-//{
-//
-//    $dir = opendir($dirPath);
-//    echo '
-//        <div class="folder">
-//            <div class="tree__item-view folder__name">' . $dirName . '</div>
-//            <div class="folder__items">';
-//
-//
-//    while (($dirItemName = readdir($dir)) !== false):
-//        if ($dirItemName == '.' || $dirItemName == '..') {
-//            continue;
-//        }
-//        if (is_dir($dirPath . '/' . $dirItemName)):
-////            printDirItemsList($dirItemName, $dirPath . '/' . $dirItemName);
-////        Удаляем удаляем содержимое директории, а потом саму директорию
-//        elseif (is_file($dirPath . '/' . $dirItemName)):
-////        удаляем файл. unlink
-//        endif;
-//    endwhile;
-//    closedir($dir);
-//}
-
 if (isset($_GET['logout']) && isset($_SESSION['authUserName']) && $_GET['logout'] == $_SESSION['authUserName']) {
     unset($_SESSION['authUserName']);
     header('Location: /php-lab-b3/index.php');

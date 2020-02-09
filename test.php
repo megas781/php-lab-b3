@@ -10,18 +10,12 @@
 <body>
 <pre>
 <?
-
-//mkdir('root/my/new/dir', 0777, true);
-
-
 //Удалить директорию ($dir должен начинаться с 'root/...')
 function removeDirectory(string $dir): bool
 {
-
     if (!is_dir($dir)) {
         return false;
     }
-
     if ($objs = glob(trim($dir, ' /') . '/*')) {
         print_r($objs);
         foreach ($objs as $obj) {
@@ -31,33 +25,11 @@ function removeDirectory(string $dir): bool
     rmdir($dir);
     return true;
 }
-
-//removeDirectory('root/dir_to_delete');
-
-
-//function moveFileToUploadDirectory($filePath, $uploadDirectory)
-//{
-//    //если файла не существует, то удаляем директорию
-//    if (!is_file($filePath)) {
-//
-//    } else {
-//
-//        //если каталога не существует, то создаем его
-//        if (!is_dir($uploadDirectory)) {
-//            mkdir($uploadDirectory, 0777, true);
-//        }
-//        move_uploaded_file($filePath, $uploadDirectory);
-//    }
-//}
-
-
-//moveFileToUploadDirectory('root/my_file.html', 'root/my/new/dir');
-
 // (должно начинаться с 'root/...')
-function getNameForNewFileInDirectory($dirPath, $tmpFilePath)
+function getNameForNewFileInDirectory($dirPath, $uploadFileName)
 {
     $dirPath = trim($dirPath, ' /');
-    $tmpFilePath = trim($tmpFilePath, ' ');
+
 
      //если каталога не существует...
     if (!file_exists($dirPath)) {
@@ -69,12 +41,12 @@ function getNameForNewFileInDirectory($dirPath, $tmpFilePath)
     //Определяем расширение файла
 //    $ext = end(explode('.', $tmpFileName));
 
-    $tmpFileName = end(explode('/', $tmpFilePath));
+    $uploadNameComponents = explode('.', $uploadFileName);
 
     //Если имя делится на несколько частей по знаку '.'
-    if (sizeof(explode('.', $tmpFileName)) > 1) {
+    if (sizeof($uploadNameComponents) > 1) {
         //То мы можем достать расширение
-        $ext = end(explode('.', $tmpFileName));
+        $ext = end($uploadNameComponents);
     } else {
         //Если у файла нет расширения, то оно равно пустой строке
         $ext = '';
@@ -86,13 +58,11 @@ function getNameForNewFileInDirectory($dirPath, $tmpFilePath)
     $dirItemsList = scandir($dirPath);
     array_shift($dirItemsList);
     array_shift($dirItemsList);
-    print_r($dirItemsList);
+
     foreach ($dirItemsList as $dirItem) {
         if (is_file($dirPath . '/' . $dirItem)) {
             $itemNameComponents = explode('.', $dirItem);
-
             $comparableName = $itemNameComponents[0];
-
             if ($comparableName == $n) {
                 //Если файл с таким именем уже есть, то прибавляем 1
                 $n++;
@@ -100,13 +70,24 @@ function getNameForNewFileInDirectory($dirPath, $tmpFilePath)
         }
     }
 
-//    echo '$dirPath: ' . $dirPath . ';';
     return ($dirPath . '/' . $n . ($ext?'.':'') . $ext); // возвращаем свободное имя
 }
-var_dump(getNameForNewFileInDirectory('root/sub_directory1', 'some/temp/dir/upload.ed/file.html'));
+//передвижение файла
+function moveFileToDirectorySafely($filePath, $uploadDirectory)
+{
+    //если файла не существует, то удаляем директорию
 
-
-
+    if (is_dir($uploadDirectory)) {
+        if (is_file($filePath)) {
+            move_uploaded_file($filePath, $uploadDirectory);
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
 
 ?>
 
