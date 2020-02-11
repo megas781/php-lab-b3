@@ -11,13 +11,15 @@
 <pre>
     <?
     require_once 'upload_file_utils.php';
+
+    require_once 'user_utils.php';
+
     echo '<pre>';
 
-
-//    addFileToUser('megas781', 'ff.png');
-//    var_dump(getUserData('megas781'));
-
-//    $subj = 'megas781';
+//    var_dump(getOwnerOfFile('./root/photos/1.png'));
+//    var_dump(getOwnerOfFile('./root/megas781/1.csv'));
+//
+//    var_dump(getOwnerOfFile('./root/7z_by_asdf/4.7z'));
 
     ?>
 

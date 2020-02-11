@@ -15,7 +15,6 @@ if (isset($_GET['logout']) && isset($_SESSION['authUserName']) && $_GET['logout'
 }
 
 
-
 //Решаем судьбу переменной authUser
 if (isset($_SESSION['authUserName'])) {
     $authUser = ['name' => $_SESSION['authUserName']];
@@ -32,6 +31,10 @@ if (isset($_SESSION['authUserName'])) {
 
 //Загрузка файла. Относится к модулю tree, но да пофиг. Проверка, не хочет ли загрузиться какой-нибудь файл
 //всё упирается в проверку наличия пути к папке загрузки
+//echo '<pre>';
+//var_dump($_POST);
+//var_dump($_FILES);
+//echo '</pre>';
 if (isset($_POST['dir-name'])) {
     $chosenUploadDirectory = './root/' . trim($_POST['dir-name'], ' /');
 
@@ -42,15 +45,24 @@ if (isset($_POST['dir-name'])) {
         echo '$chosenUploadDirectory may be dangerous: ' . $chosenUploadDirectory;
     } else {
         if (isset($_FILES['myfilename'])) {
-            if (isset($_FILES['myfilename']['tmp_name'])) {
-                //Проверяем наличие загруженного файла на серверной стороне
-                if ($_FILES['myfilename']['tmp_name']) {
-//                    echo 'asdf';
-//                    var_dump($chosenUploadDirectory);
 
-                    $uploadPath = getNamePathForNewFileInDirectory($chosenUploadDirectory, $_FILES['myfilename']['name']);
-                    if (moveFileSafely($_FILES['myfilename']['tmp_name'], $uploadPath)) {
-                        addFileToUser($authUser['name'], $uploadPath);
+
+            //проверка на массивность. Если tmp_name является строкой, то никакие файлы не загружены, и нужно просто удалить указанную папку
+            if (is_array($_FILES['myfilename']['tmp_name'])) {
+
+                if (sizeof($_FILES['myfilename']['tmp_name']) > 0 && $_FILES['myfilename']['tmp_name'][0]) {
+
+                    for ($i = 0; $i < sizeof($_FILES['myfilename']['tmp_name']); $i++) {
+
+                        $tmp_name = $_FILES['myfilename']['tmp_name'][$i];
+                        $name = $_FILES['myfilename']['name'][$i];
+
+                        $uploadPath = getNamePathForNewFileInDirectory($chosenUploadDirectory, $name);
+                        if (moveFileSafely($tmp_name, $uploadPath)) {
+                            //Добавляем информацию о том, что данный файл принадлежит данному пользователю
+                            addFileToUser($authUser['name'], $uploadPath);
+                        }
+
                     }
                 } else {
                     //удаляем каталог со всеми файлами
@@ -59,10 +71,17 @@ if (isset($_POST['dir-name'])) {
                     }
                 }
 //                echo 'some useful action performed';
-                header('Location: ./index.php');
+
             } else {
-                echo 'error 322';
+//                echo 'удялем бля?: ' . $chosenUploadDirectory;
+                //удаляем каталог со всеми файлами
+                if ($chosenUploadDirectory !== './root/') {
+                    removeDirectory($chosenUploadDirectory);
+                }
             }
+
+            header('Location: ./index.php');
+
         } else {
             echo 'error 228';
         }
@@ -77,7 +96,7 @@ if (isset($_POST['dir-name'])) {
 ?>
 <?php require SITE_ROOT . 'master-page/Header/header.php'; ?>
 <div class="column _flex-centering">
-    <? if (isset($authUser)):?>
+    <? if (isset($authUser)): ?>
         <h4>Добро пожаловать, <?= $authUser['name'] ?>!</h4>
         <? include 'tree.php' ?>
     <? else: ?>

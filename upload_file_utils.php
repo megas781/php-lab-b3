@@ -70,7 +70,6 @@ function moveFileSafely($filePath, $uploadPath)
     //если файла не существует, то удаляем директорию ($uploadDirectory обязана существовать, т.к. она создается в getNamePathForNewFileInDirectory);)
     if (is_dir(dirname($uploadPath))) {
         if (is_file($filePath)) {
-
             move_uploaded_file($filePath, $uploadPath);
             return true;
         } else {

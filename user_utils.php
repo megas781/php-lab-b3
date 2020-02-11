@@ -93,3 +93,20 @@ function addFileToUser($user_name, $filePath)
     flock($f, LOCK_UN);
     fclose($f);
 }
+
+function getOwnerOfFile($filePath) {
+    $array = file('users.csv');
+
+//    $user = null;
+
+    foreach ($array as $fileLine) {
+        $lineComponents = explode(';', trim($fileLine));
+
+        for ($i = 2; $i < sizeof($lineComponents); $i++) {
+            if ($lineComponents[$i] == $filePath) {
+                return $lineComponents[0];
+            }
+        }
+    }
+    return 'null';
+}

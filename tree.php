@@ -1,6 +1,7 @@
 <?php
 
 require_once 'app-start.php';
+require_once 'user_utils.php';
 
 function printDirItemsList($dirName, $dirPath)
 {
@@ -19,8 +20,9 @@ function printDirItemsList($dirName, $dirPath)
         if (is_dir($dirPath . '/' . $dirItemName)):
             printDirItemsList($dirItemName, $dirPath . '/' . $dirItemName);
         elseif (is_file($dirPath . '/' . $dirItemName)): ?>
-            <a href="<?= './viewer.php?'. 'path=' . $dirPath . '/' . $dirItemName ?>"
-               class="tree__item-view file"><?= $dirItemName ?></a>
+            <div class="tree__item-view"><a href="<?= './viewer.php?' . 'path=' . $dirPath . '/' . $dirItemName ?>"
+                    class="tree__item-link file"><?= $dirItemName ?></a>
+                <span class="tree__owner"><?= (getOwnerOfFile($dirPath . '/' . $dirItemName)) ?></span></div>
         <? endif;
     endwhile;
     echo '    </div>
@@ -48,8 +50,10 @@ function printDirItemsList($dirName, $dirPath)
             if (is_dir('./root/' . $dirItemName)):
                 printDirItemsList($dirItemName, './root/' . $dirItemName);
             elseif (is_file('./root/' . $dirItemName)): ?>
+
                 <a href="<?= './viewer.php?path=' . './root/' . $dirItemName ?>"
-                   class="tree__item-view file" ><?= $dirItemName ?></a>
+                   class="tree__item-view file"><?= $dirItemName ?>
+                    <span><?= (getOwnerOfFile('./root/' . $dirItemName)) ?></span></a>
             <? endif;
         }
         ?>
@@ -69,7 +73,8 @@ function printDirItemsList($dirName, $dirPath)
     <div><input type="text" name="dir-name" id="dir-name" value="/" pattern="^/.*"></div>
 
     <div><label for="myfilename">Локальный файл</label></div>
-    <div><input type="file" name="myfilename"></div>
+    <div><input type="file" name="myfilename[]" multiple></div>
+    <!--    <div><input type="file" name="myfilename"></div>-->
 
     <div><input type="submit" value="Отправить файл на сервер"></div>
 </form>
