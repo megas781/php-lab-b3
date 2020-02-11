@@ -14,45 +14,6 @@ if (isset($_GET['logout']) && isset($_SESSION['authUserName']) && $_GET['logout'
     exit();
 }
 
-//Загрузка файла. Относится к модулю tree, но да пофиг. Проверка, не хочет ли загрузиться какой-нибудь файл
-//всё упирается в проверку наличия пути к папке загрузки
-if (isset($_POST['dir-name'])) {
-    $chosenUploadDirectory = './root/' . trim($_POST['dir-name'], ' /');
-
-    //если в пути присутствует "..", то не рассматриваем такой путь
-    if (is_numeric(strpos($_POST['dir-name'], '..'))) {
-//        можно вывести ошибку, что не принимаются пути с двойными точками
-        echo 'post[dir-name] contains "..": ' . $_POST['dir-name'];
-    } else {
-        if (isset($_FILES['myfilename'])) {
-            if (isset($_FILES['myfilename']['tmp_name'])) {
-                //Проверяем наличие загруженного файла на серверной стороне
-                if ($_FILES['myfilename']['tmp_name']) {
-//                    echo 'asdf';
-                    var_dump($chosenUploadDirectory);
-                    var_dump(moveFileToDirectorySafely($_FILES['myfilename']['tmp_name'], $chosenUploadDirectory, $_FILES['myfilename']['name']));
-
-                } else {
-                    //удаляем каталог со всеми файлами
-                    removeDirectory($chosenUploadDirectory);
-                }
-                echo 'some useful action performed';
-//                header('Location: ./index.php');
-            } else {
-                echo 'error 322';
-            }
-        } else {
-            echo 'error 228';
-        }
-    }
-
-} else {
-    echo 'post[dir-name] is not set';
-    print_r($_POST);
-}
-
-
-
 function authenticate(string $login, string $password)
 {
     $f = fopen('users.csv', 'rt');
@@ -94,10 +55,52 @@ if (isset($_SESSION['authUserName'])) {
 }
 
 
+//Загрузка файла. Относится к модулю tree, но да пофиг. Проверка, не хочет ли загрузиться какой-нибудь файл
+//всё упирается в проверку наличия пути к папке загрузки
+if (isset($_POST['dir-name'])) {
+    $chosenUploadDirectory = './root/' . trim($_POST['dir-name'], ' /');
+
+
+    //ПРОВЕРКА ВАЛИДНОСТИ ПУТИ
+    //если в пути присутствует "..", то не рассматриваем такой путь, или идет указание
+    if (is_numeric(strpos($chosenUploadDirectory, '..'))) {
+//        можно вывести ошибку, что не принимаются пути с двойными точками
+        echo '$chosenUploadDirectory may be dangerous: ' . $chosenUploadDirectory;
+    } else {
+        if (isset($_FILES['myfilename'])) {
+            if (isset($_FILES['myfilename']['tmp_name'])) {
+                //Проверяем наличие загруженного файла на серверной стороне
+                if ($_FILES['myfilename']['tmp_name']) {
+//                    echo 'asdf';
+                    var_dump($chosenUploadDirectory);
+                    var_dump(moveFileToDirectorySafely($_FILES['myfilename']['tmp_name'], $chosenUploadDirectory, $_FILES['myfilename']['name']));
+
+                } else {
+                    //удаляем каталог со всеми файлами
+                    if ($chosenUploadDirectory !== './root/') {
+                        removeDirectory($chosenUploadDirectory);
+                    }
+                }
+                echo 'some useful action performed';
+//                header('Location: ./index.php');
+            } else {
+                echo 'error 322';
+            }
+        } else {
+            echo 'error 228';
+        }
+    }
+
+} else {
+    echo 'post[dir-name] is not set';
+    print_r($_POST);
+}
+
+
 ?>
 <?php require SITE_ROOT . 'master-page/Header/header.php'; ?>
 <div class="column _flex-centering">
-    <? if ($authUser): ?>
+    <? if (isset($authUser)):?>
         <h4>Добро пожаловать, <?= $authUser['name'] ?>!</h4>
         <? include 'tree.php' ?>
     <? else: ?>

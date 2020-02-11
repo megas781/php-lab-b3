@@ -1,4 +1,4 @@
-<?
+<?php
 //Удалить директорию ($dir должен начинаться с 'root/...')
 function removeDirectory(string $dir): bool
 {

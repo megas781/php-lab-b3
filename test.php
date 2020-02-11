@@ -9,11 +9,10 @@
 </head>
 <body>
 <pre>
-<?
-
-
-?>
-
+    <? echo 'asdf'?>
+    <?php
+    phpinfo();
+    ?>
 
 </body>
 </html>
