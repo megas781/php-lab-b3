@@ -88,6 +88,8 @@ function addFileToUser($user_name, $filePath)
 
 
     $f = fopen('users.csv', 'w');
+    flock($f, LOCK_EX);
     fwrite($f, $fileText);
+    flock($f, LOCK_UN);
     fclose($f);
 }
