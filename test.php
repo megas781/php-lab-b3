@@ -9,9 +9,40 @@
 </head>
 <body>
 <pre>
-    <? echo 'asdf'?>
-    <?php
-    phpinfo();
+    <?
+    require_once 'upload_file_utils.php';
+
+    function getUserData($user_name)
+    {
+        $array = file('users.csv');
+
+        $user = null;
+
+        foreach ($array as $fileLine) {
+            $lineComponents = explode(';', trim($fileLine));
+            if ($lineComponents[0] == $user_name) {
+                $user = $lineComponents;
+            }
+        }
+        return $user;
+    }
+
+    function checkFileAccess($user_name, $filename): bool
+    {
+        $user = getUserData($user_name);
+
+        if (is_array($user)) {
+            for ($i = 2; $i < sizeof($user); $i++) {
+                if ($user[$i] == $filename) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    var_dump(checkFileAccess('megas781', './root/index.asdf'));
+
     ?>
 
 </body>
