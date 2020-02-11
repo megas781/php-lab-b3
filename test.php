@@ -11,38 +11,13 @@
 <pre>
     <?
     require_once 'upload_file_utils.php';
+    echo '<pre>';
 
-    function getUserData($user_name)
-    {
-        $array = file('users.csv');
 
-        $user = null;
+//    addFileToUser('megas781', 'ff.png');
+//    var_dump(getUserData('megas781'));
 
-        foreach ($array as $fileLine) {
-            $lineComponents = explode(';', trim($fileLine));
-            if ($lineComponents[0] == $user_name) {
-                $user = $lineComponents;
-            }
-        }
-        return $user;
-    }
-
-    function checkFileAccess($user_name, $filename): bool
-    {
-        $user = getUserData($user_name);
-
-        if (is_array($user)) {
-            for ($i = 2; $i < sizeof($user); $i++) {
-                if ($user[$i] == $filename) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    var_dump(checkFileAccess('megas781', './root/index.asdf'));
-
+//    $subj = 'megas781';
     ?>
 
 </body>

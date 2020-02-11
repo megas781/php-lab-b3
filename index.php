@@ -4,7 +4,7 @@ session_start();
 
 require_once 'app-start.php';
 require_once 'upload_file_utils.php';
-
+require_once 'user_utils.php';
 
 $authUser = null;
 
@@ -14,31 +14,6 @@ if (isset($_GET['logout']) && isset($_SESSION['authUserName']) && $_GET['logout'
     exit();
 }
 
-function authenticate(string $login, string $password)
-{
-    $f = fopen('users.csv', 'rt');
-    while (!feof($f)) {
-
-        $str = fgets($f);
-        $test_user = explode(';', $str);
-
-//        Проверяем логин
-        if (trim($test_user[0]) == $login) {
-//            Проверяем пароль
-            if (trim($test_user[1]) == $password) {
-                //Опача, успешный вход. Сохраняем в сессии
-                $_SESSION['authUserName'] = $_POST['login'];
-                fclose($f);
-                //Возвращаем объект пользователя. Пока одно поле, да.
-                return [
-                        'name' => $test_user[0]
-                ];
-            }
-        }
-    }
-    fclose($f);
-    return null;
-}
 
 
 //Решаем судьбу переменной authUser
@@ -60,7 +35,6 @@ if (isset($_SESSION['authUserName'])) {
 if (isset($_POST['dir-name'])) {
     $chosenUploadDirectory = './root/' . trim($_POST['dir-name'], ' /');
 
-
     //ПРОВЕРКА ВАЛИДНОСТИ ПУТИ
     //если в пути присутствует "..", то не рассматриваем такой путь, или идет указание
     if (is_numeric(strpos($chosenUploadDirectory, '..'))) {
@@ -75,9 +49,9 @@ if (isset($_POST['dir-name'])) {
 //                    var_dump($chosenUploadDirectory);
 
                     $uploadPath = getNamePathForNewFileInDirectory($chosenUploadDirectory, $_FILES['myfilename']['name']);
-
-                    var_dump(moveFileSafely($_FILES['myfilename']['tmp_name'], $uploadPath));
-
+                    if (moveFileSafely($_FILES['myfilename']['tmp_name'], $uploadPath)) {
+                        addFileToUser($authUser['name'], $uploadPath);
+                    }
                 } else {
                     //удаляем каталог со всеми файлами
                     if ($chosenUploadDirectory !== './root/') {

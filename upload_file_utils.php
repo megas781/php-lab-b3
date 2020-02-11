@@ -72,12 +72,12 @@ function moveFileSafely($filePath, $uploadPath)
         if (is_file($filePath)) {
 
             move_uploaded_file($filePath, $uploadPath);
-            return 1;
+            return true;
         } else {
-            return 2;
+            return false;
         }
     } else {
-        return 4;
+        return false;
     }
 }
 
