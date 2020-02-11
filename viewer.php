@@ -1,6 +1,7 @@
 <?php
 
 require_once 'app-start.php';
+require_once 'user_utils.php';
 
 session_start();
 
@@ -30,13 +31,13 @@ if (isset($_SESSION['authUserName'])) {
 <?php require SITE_ROOT . 'master-page/Header/header.php'; ?>
 
 <div class="column _flex-centering">
-    <? if ($authUser): ?>
+
+    <?if ($authUser): ?>
         <h4>Добро пожаловать, <?= $authUser['name'] ?>!</h4>
         <a href="./index.php" style="display: block; padding: 8px;">К списку файлов</a>
-
+    <? if (checkFileAccess($authUser['name'], $_GET['path'])): ?>
         <!--        выбираем viewer текстовый или изображение -->
         <?
-
         $filename = explode('/', $_GET['path'])[array_key_last(explode('/', $_GET['path']))];
         $ext = explode('.', $filename)[array_key_last(explode('.', $filename))];
         echo '<p>Файл: ' . $filename . '</p>';
@@ -69,8 +70,15 @@ while (($line = fgets($f)) !== false) {
 ?>
 </pre>
             </div>
-        <? endif; ?>
+        <? endif; //end of check if file is an image ?>
+    <? else: //else if user doesn't have access to the file ?>
+    <h4>Пользователь <?=$authUser['name']?> не имеет доступ к файлу <?= $_GET['path'] ?></h4>
+    <? endif; //end of if where user doesn't have access to the file ?>
+    <? else: //not authed user?>
+    <h4>Войдите в свою учетную запись, чтобы воспользоваться ресурсом</h4>
+        <a href="./index.php">Войти</a>
     <? endif; ?>
+
 </div>
 
 <?php require SITE_ROOT . 'master-page/Footer/footer.php' ?>
