@@ -15,7 +15,7 @@ function removeDirectory(string $dir): bool
     return true;
 }
 // (должно начинаться с 'root/...')
-function getNameForNewFileInDirectory($dirPath, $uploadFileName)
+function getNamePathForNewFileInDirectory($dirPath, $uploadFileName)
 {
     $dirPath = trim($dirPath, ' /');
 
@@ -28,10 +28,7 @@ function getNameForNewFileInDirectory($dirPath, $uploadFileName)
     }
 
     //Определяем расширение файла
-//    $ext = end(explode('.', $tmpFileName));
-
     $uploadNameComponents = explode('.', $uploadFileName);
-
     //Если имя делится на несколько частей по знаку '.'
     if (sizeof($uploadNameComponents) > 1) {
         //То мы можем достать расширение
@@ -62,13 +59,16 @@ function getNameForNewFileInDirectory($dirPath, $uploadFileName)
     return ($dirPath . '/' . $n . ($ext?'.':'') . $ext); // возвращаем свободное имя
 }
 //передвижение файла
-function moveFileToDirectorySafely($filePath, $uploadDirectory)
+function moveFileToDirectorySafely($filePath, $uploadDirectory, $uploadFileName)
 {
     //если файла не существует, то удаляем директорию
 
     if (is_dir($uploadDirectory)) {
         if (is_file($filePath)) {
-            move_uploaded_file($filePath, $uploadDirectory);
+
+            $newPath = getNamePathForNewFileInDirectory($uploadDirectory, $uploadFileName);
+
+            move_uploaded_file($filePath, $newPath);
             return true;
         } else {
             return false;

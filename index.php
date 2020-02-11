@@ -1,8 +1,10 @@
 <?php
 
-require_once 'app-start.php';
-
 session_start();
+
+require_once 'app-start.php';
+require_once 'upload_file_utils.php';
+
 
 $authUser = null;
 
@@ -13,32 +15,34 @@ if (isset($_GET['logout']) && isset($_SESSION['authUserName']) && $_GET['logout'
 }
 
 //Загрузка файла. Относится к модулю tree, но да пофиг. Проверка, не хочет ли загрузиться какой-нибудь файл
-if (isset($_FILES['myfilename'])) {
-    if (isset($_FILES['myfilename']['tmp_name'])) {
-        //Проверяем наличие загруженного файла на серверной стороне
-        if ($_FILES['myfilename']['tmp_name']) {
+//всё упирается в проверку наличия пути к папке загрузки
+if (isset($_POST['dir-name'])) {
+    $chosenUploadDirectory = './root/' . trim($_POST['dir-name'], ' /');
 
-            //Если каталог, который указан в форме??
-            $chosenUploadDirectory = './root/' . trim($_POST['dir-name'], ' /');
+    //если в пути присутствует "..", то не рассматриваем такой путь
+    if (is_numeric(strpos($_POST['dir-name'], '..'))) {
+//        можно вывести ошибку, что не принимаются пути с двойными точками
+    } else {
+        if (isset($_FILES['myfilename'])) {
+            if (isset($_FILES['myfilename']['tmp_name'])) {
+                //Проверяем наличие загруженного файла на серверной стороне
+                if ($_FILES['myfilename']['tmp_name']) {
 
-            if (is_dir($chosenUploadDirectory)) {
-                scandir($chosenUploadDirectory);
-                $k = 0;
-                                move_uploaded_file($_FILES['myfilename']['tmp_name'], $chosenUploadDirectory . '/' . $k);
-                header('Location: ./index.php');
-            } else {
-                //Если каталог не существует, мы его создадим
-                mkdir($chosenUploadDirectory);
+                    moveFileToDirectorySafely($_FILES['myfilename']['tmp_name'], $chosenUploadDirectory, $_FILES['myfilename']['name']);
 
+                } else {
+                    //удаляем каталог со всеми файлами
+                    removeDirectory($chosenUploadDirectory);
+                }
                 header('Location: ./index.php');
             }
-            exit();
-        } else {
-            //удаляем каталог со всеми файлами
-
         }
     }
+
+
 }
+
+
 
 function authenticate(string $login, string $password)
 {
