@@ -16,7 +16,7 @@ function removeDirectory(string $dir): bool
 }
 
 // (должно начинаться с 'root/...')
-function getNamePathForNewFileInDirectory($dirPath, $uploadFileName)
+function getNamePathForNewFileInDirectory($dirPath, $uploadFileName): string
 {
     $dirPath = trim($dirPath, ' /');
 
@@ -26,9 +26,9 @@ function getNamePathForNewFileInDirectory($dirPath, $uploadFileName)
         //...то создаем каталог
         umask(0); // сбрасываем значение umask
         mkdir($dirPath, 0777, true); // создаем ее
-        echo 'я создал!!';
+//        echo 'я создал!!';
     } else {
-        echo '$dirPath не удовлетворяет !file_exists: ' . $dirPath;
+//        echo '$dirPath не удовлетворяет !file_exists: ' . $dirPath;
     }
 
     //Определяем расширение файла
@@ -64,16 +64,14 @@ function getNamePathForNewFileInDirectory($dirPath, $uploadFileName)
 }
 
 //передвижение файла
-function moveFileToDirectorySafely($filePath, $uploadDirectory, $uploadFileName)
+function moveFileSafely($filePath, $uploadPath)
 {
 
-    $newPath = getNamePathForNewFileInDirectory($uploadDirectory, $uploadFileName);
-
     //если файла не существует, то удаляем директорию ($uploadDirectory обязана существовать, т.к. она создается в getNamePathForNewFileInDirectory);)
-    if (is_dir($uploadDirectory)) {
+    if (is_dir(dirname($uploadPath))) {
         if (is_file($filePath)) {
 
-            move_uploaded_file($filePath, $newPath);
+            move_uploaded_file($filePath, $uploadPath);
             return 1;
         } else {
             return 2;
@@ -81,4 +79,22 @@ function moveFileToDirectorySafely($filePath, $uploadDirectory, $uploadFileName)
     } else {
         return 4;
     }
+}
+
+function getExtension($filePath): string {
+    //Определяем расширение файла
+
+    $pathComponents = explode('/', $filePath);
+    $fileName= end($pathComponents);
+
+    $uploadNameComponents = explode('.', $fileName);
+    //Если имя делится на несколько частей по знаку '.'
+    if (sizeof($uploadNameComponents) > 1) {
+        //То мы можем достать расширение
+        $ext = end($uploadNameComponents);
+    } else {
+        //Если у файла нет расширения, то оно равно пустой строке
+        $ext = '';
+    }
+    return ext;
 }

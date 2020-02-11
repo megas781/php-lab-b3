@@ -72,8 +72,11 @@ if (isset($_POST['dir-name'])) {
                 //Проверяем наличие загруженного файла на серверной стороне
                 if ($_FILES['myfilename']['tmp_name']) {
 //                    echo 'asdf';
-                    var_dump($chosenUploadDirectory);
-                    var_dump(moveFileToDirectorySafely($_FILES['myfilename']['tmp_name'], $chosenUploadDirectory, $_FILES['myfilename']['name']));
+//                    var_dump($chosenUploadDirectory);
+
+                    $uploadPath = getNamePathForNewFileInDirectory($chosenUploadDirectory, $_FILES['myfilename']['name']);
+
+                    var_dump(moveFileSafely($_FILES['myfilename']['tmp_name'], $uploadPath));
 
                 } else {
                     //удаляем каталог со всеми файлами
@@ -81,8 +84,8 @@ if (isset($_POST['dir-name'])) {
                         removeDirectory($chosenUploadDirectory);
                     }
                 }
-                echo 'some useful action performed';
-//                header('Location: ./index.php');
+//                echo 'some useful action performed';
+                header('Location: ./index.php');
             } else {
                 echo 'error 322';
             }
@@ -92,8 +95,8 @@ if (isset($_POST['dir-name'])) {
     }
 
 } else {
-    echo 'post[dir-name] is not set';
-    print_r($_POST);
+//    echo 'post[dir-name] is not set';
+//    print_r($_POST);
 }
 
 
