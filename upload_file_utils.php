@@ -14,6 +14,7 @@ function removeDirectory(string $dir): bool
     rmdir($dir);
     return true;
 }
+
 // (должно начинаться с 'root/...')
 function getNamePathForNewFileInDirectory($dirPath, $uploadFileName)
 {
@@ -25,6 +26,9 @@ function getNamePathForNewFileInDirectory($dirPath, $uploadFileName)
         //...то создаем каталог
         umask(0); // сбрасываем значение umask
         mkdir($dirPath, 0777, true); // создаем ее
+        echo 'я создал!!';
+    } else {
+        echo '$dirPath не удовлетворяет !file_exists: ' . $dirPath;
     }
 
     //Определяем расширение файла
@@ -56,24 +60,25 @@ function getNamePathForNewFileInDirectory($dirPath, $uploadFileName)
         }
     }
 
-    return ($dirPath . '/' . $n . ($ext?'.':'') . $ext); // возвращаем свободное имя
+    return ($dirPath . '/' . $n . ($ext ? '.' : '') . $ext); // возвращаем свободное имя
 }
+
 //передвижение файла
 function moveFileToDirectorySafely($filePath, $uploadDirectory, $uploadFileName)
 {
-    //если файла не существует, то удаляем директорию
 
+    $newPath = getNamePathForNewFileInDirectory($uploadDirectory, $uploadFileName);
+
+    //если файла не существует, то удаляем директорию ($uploadDirectory обязана существовать, т.к. она создается в getNamePathForNewFileInDirectory);)
     if (is_dir($uploadDirectory)) {
         if (is_file($filePath)) {
 
-            $newPath = getNamePathForNewFileInDirectory($uploadDirectory, $uploadFileName);
-
             move_uploaded_file($filePath, $newPath);
-            return true;
+            return 1;
         } else {
-            return false;
+            return 2;
         }
     } else {
-        return false;
+        return 4;
     }
 }

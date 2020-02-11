@@ -66,10 +66,10 @@ function printDirItemsList($dirName, $dirPath)
 <form method="post" enctype="multipart/form-data" action="">
     <h3>Загрузить файл</h3>
     <div><label for="dir-name">Каталог на сервере</label></div>
-    <div><input type="text" name="dir-name" id="dir-name" value="/" pattern="^/*"></div>
+    <div><input type="text" name="dir-name" id="dir-name" value="/" pattern="^/.*"></div>
 
     <div><label for="myfilename">Локальный файл</label></div>
-    <div><input type="file" name="myfilename" required></div>
+    <div><input type="file" name="myfilename"></div>
 
     <div><input type="submit" value="Отправить файл на сервер"></div>
 </form>

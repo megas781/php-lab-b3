@@ -22,24 +22,33 @@ if (isset($_POST['dir-name'])) {
     //если в пути присутствует "..", то не рассматриваем такой путь
     if (is_numeric(strpos($_POST['dir-name'], '..'))) {
 //        можно вывести ошибку, что не принимаются пути с двойными точками
+        echo 'post[dir-name] contains "..": ' . $_POST['dir-name'];
     } else {
         if (isset($_FILES['myfilename'])) {
             if (isset($_FILES['myfilename']['tmp_name'])) {
                 //Проверяем наличие загруженного файла на серверной стороне
                 if ($_FILES['myfilename']['tmp_name']) {
-
-                    moveFileToDirectorySafely($_FILES['myfilename']['tmp_name'], $chosenUploadDirectory, $_FILES['myfilename']['name']);
+//                    echo 'asdf';
+                    var_dump($chosenUploadDirectory);
+                    var_dump(moveFileToDirectorySafely($_FILES['myfilename']['tmp_name'], $chosenUploadDirectory, $_FILES['myfilename']['name']));
 
                 } else {
                     //удаляем каталог со всеми файлами
                     removeDirectory($chosenUploadDirectory);
                 }
-                header('Location: ./index.php');
+                echo 'some useful action performed';
+//                header('Location: ./index.php');
+            } else {
+                echo 'error 322';
             }
+        } else {
+            echo 'error 228';
         }
     }
 
-
+} else {
+    echo 'post[dir-name] is not set';
+    print_r($_POST);
 }
 
 
