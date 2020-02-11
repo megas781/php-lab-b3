@@ -13,7 +13,7 @@ function printDirItemsList($dirName, $dirPath)
 
 
     while (($dirItemName = readdir($dir)) !== false):
-        if ($dirItemName == '.' || $dirItemName == '..') {
+        if ($dirItemName == '.' || $dirItemName == '..' || $dirItemName == '.htaccess') {
             continue;
         }
         if (is_dir($dirPath . '/' . $dirItemName)):
@@ -42,7 +42,7 @@ function printDirItemsList($dirName, $dirPath)
         while (($dirItemName = readdir($root)) !== false) {
 
 
-            if ($dirItemName == '.' || $dirItemName == '..') {
+            if ($dirItemName == '.' || $dirItemName == '..' || $dirItemName == '.htaccess') {
                 continue;
             }
             if (is_dir('./root/' . $dirItemName)):
