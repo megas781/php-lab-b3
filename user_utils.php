@@ -97,8 +97,6 @@ function addFileToUser($user_name, $filePath)
 function getOwnerOfFile($filePath) {
     $array = file('users.csv');
 
-//    $user = null;
-
     foreach ($array as $fileLine) {
         $lineComponents = explode(';', trim($fileLine));
 
@@ -108,5 +106,5 @@ function getOwnerOfFile($filePath) {
             }
         }
     }
-    return 'null';
+    return null;
 }

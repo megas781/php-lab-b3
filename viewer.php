@@ -32,10 +32,29 @@ if (isset($_SESSION['authUserName'])) {
 
 <div class="column _flex-centering">
 
+    <?php
+    if (!$_GET['path']) {
+        ?><h4>Путь к файлу не передан</h4><?
+        goto footerEnd;
+    };
+
+    if (!file_exists($_GET['path'])) {
+        ?><h4>Файл <?=$_GET['path']?> не найден</h4><?
+        goto footerEnd;
+    }
+    if (!getOwnerOfFile($_GET['path'])) {
+        $unowned = true;
+        ?><h4>Файл не имеет владельца. Открытый доступ</h4><?
+    } else {
+        $unowned = false;
+    }
+    ?>
+
     <?if ($authUser): ?>
         <h4>Добро пожаловать, <?= $authUser['name'] ?>!</h4>
         <a href="./index.php" style="display: block; padding: 8px;">К списку файлов</a>
-    <? if (checkFileAccess($authUser['name'], $_GET['path'])): ?>
+
+    <? if (checkFileAccess($authUser['name'], $_GET['path']) || $unowned): ?>
         <!--        выбираем viewer текстовый или изображение -->
         <?
         $filename = explode('/', $_GET['path'])[array_key_last(explode('/', $_GET['path']))];
@@ -77,9 +96,11 @@ while (($line = fgets($f)) !== false) {
     <? else: //not authed user?>
     <h4>Войдите в свою учетную запись, чтобы воспользоваться ресурсом</h4>
         <a href="./index.php">Войти</a>
-    <? endif; ?>
+    <? endif; //end if not authed user ?>
+
+
 
 </div>
-
+<?php footerEnd: ?>
 <?php require SITE_ROOT . 'master-page/Footer/footer.php' ?>
 
