@@ -1,18 +1,36 @@
 <?php
+require_once 'user_utils.php';
 //Удалить директорию ($dir должен начинаться с 'root/...')
-function removeDirectory(string $dir): bool
+function removeDirectory(string $dir, string $authedUser): bool
 {
     if (!is_dir($dir)) {
         return false;
     }
     if ($objs = glob(trim($dir, ' /') . '/*')) {
-        print_r($objs);
+
+        //если
+
+        $hasPermissionToDelete = true;
         foreach ($objs as $obj) {
-            is_dir($obj) ? removeDirectory($obj) : unlink($obj);
+            if (is_dir($obj)) {
+                removeDirectory($obj, $authedUser);
+            } else {
+                $hasPermissionToDelete = $hasPermissionToDelete && ($authedUser == getOwnerOfFile($obj));
+            }
         }
+
+        if ($hasPermissionToDelete) {
+            foreach ($objs as $obj) {
+                unlink($obj);
+            }
+            rmdir($dir);
+            return true;
+        } else {
+            return false;
+        }
+
     }
-    rmdir($dir);
-    return true;
+    return false;
 }
 
 // (должно начинаться с 'root/...')
@@ -80,11 +98,12 @@ function moveFileSafely($filePath, $uploadPath)
     }
 }
 
-function getExtension($filePath): string {
+function getExtension($filePath): string
+{
     //Определяем расширение файла
 
     $pathComponents = explode('/', $filePath);
-    $fileName= end($pathComponents);
+    $fileName = end($pathComponents);
 
     $uploadNameComponents = explode('.', $fileName);
     //Если имя делится на несколько частей по знаку '.'

@@ -50,10 +50,12 @@ function printDirItemsList($dirName, $dirPath)
             if (is_dir('./root/' . $dirItemName)):
                 printDirItemsList($dirItemName, './root/' . $dirItemName);
             elseif (is_file('./root/' . $dirItemName)): ?>
-
-                <a href="<?= './viewer.php?path=' . './root/' . $dirItemName ?>"
-                   class="tree__item-view file"><?= $dirItemName ?>
-                    <span><?= (getOwnerOfFile('./root/' . $dirItemName)) ?></span></a>
+                <div class="tree__item-view">
+                    <a href="<?= './viewer.php?path=' . './root/' . $dirItemName ?>"
+                       class="tree__item-link file"><?= $dirItemName ?>
+                    </a>
+                    <span class="tree__owner"><?= (getOwnerOfFile('./root/' . $dirItemName)) ?></span>
+                </div>
             <? endif;
         }
         ?>

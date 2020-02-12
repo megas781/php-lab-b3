@@ -16,9 +16,9 @@
 
     echo '<pre>';
 
-//    var_dump(getOwnerOfFile('./root/photos/1.png'));
+//    echo 'tried to remove';
+    //    var_dump(getOwnerOfFile('./root/photos/1.png'));
 //    var_dump(getOwnerOfFile('./root/megas781/1.csv'));
-//
 //    var_dump(getOwnerOfFile('./root/7z_by_asdf/4.7z'));
 
     ?>

@@ -67,7 +67,9 @@ if (isset($_POST['dir-name'])) {
                 } else {
                     //удаляем каталог со всеми файлами
                     if ($chosenUploadDirectory !== './root/') {
-                        removeDirectory($chosenUploadDirectory);
+                        if (isset($authUser) && isset($authUser['name'])) {
+                            removeDirectory($chosenUploadDirectory, $authUser['name']);
+                        }
                     }
                 }
 //                echo 'some useful action performed';
